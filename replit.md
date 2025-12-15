@@ -66,8 +66,11 @@ Preferred communication style: Simple, everyday language.
 
 **Go Backend** (`backend/`):
 - WebSocket server for real-time agent communication
-- REST API endpoints for agents, queue, and health monitoring
-- Command execution with result logging
+- REST API endpoints for agents, queue, logs, resource history, and health monitoring
+- **PostgreSQL persistence** for agents, queue, logs, and resource metrics
+- Command execution with strict `RUN <command>` validation and blocked dangerous patterns
+- **Graceful termination** via `<END!>` signal
+- Batch queue with priority support
 - Resource monitoring (memory, CPU, goroutines)
 
 **Dashboard GUI** (`modules/ai_dashboard.py`):
