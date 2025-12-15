@@ -1,0 +1,43 @@
+ 2s ◎ pkill -f "python.*main.py"
+pkill: killing pid 1914 failed: Operasi tidak diijinkan
+                                                                                                                                       
+◄ 0s ◎ pkill -f "python.*main.py" && sleep 1 && python main.py
+pkill: killing pid 1914 failed: Operasi tidak diijinkan
+                                                                                                                                       
+◄ 0s ○ pkill -f "python.*main.py"
+python main.py
+pkill: killing pid 1914 failed: Operasi tidak diijinkan
+Ax-Shell: Including monitor 'eDP-1' (selected)
+2025-12-15 09:17:48.705 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:17:48.705 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+Error retrieving current power mode: [Errno 2] Tidak ada berkas atau direktori seperti itu: 'powerprofilesctl'
+2025-12-15 09:17:48.727 | DEBUG    | fabric.core.widgets.wm:layout_changed:273 - [Language] Keyboard: power-button, Language: English (US), Match: True
+2025-12-15 09:17:48.727 | DEBUG    | fabric.hyprland.widgets:do_initialize:226 - [Language] found language: English (US) for keyboard power-button
+2025-12-15 09:17:48.727 | INFO     | fabric.hyprland.widgets:do_initialize:236 - [Language] Set language: English (US) for keyboard: .*
+2025-12-15 09:17:48.727 | INFO     | fabric.hyprland.widgets:on_ready:195 - [Language] Connected to the hyprland socket
+2025-12-15 09:17:48.731 | INFO     | services.brightness:_detect_backend:128 - Using brightnessctl backend with device: intel_backlight
+2025-12-15 09:17:48.837 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:17:48.837 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+False
+
+(main.py:491746): Gtk-CRITICAL **: 09:17:49.088: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
+
+(main.py:491746): Gtk-CRITICAL **: 09:17:49.089: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
+
+(main.py:491746): Gtk-CRITICAL **: 09:17:49.090: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
+2025-12-15 09:17:49.250 | INFO     | fabric.hyprland.widgets:on_ready:147 - [ActiveWindow] Connected to the hyprland socket
+Connected to WebSocket server at ws://localhost:8080/ws
+2025-12-15 09:17:49.305 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:17:49.306 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:17:49.365 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:17:49.365 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+Traceback (most recent call last):
+  File "/home/danyswr/.config/Perfoma-Ax-Shell/main.py", line 139, in <module>
+    app = Application(f"{APP_NAME}", *app_components)
+  File "/usr/lib/python3.13/site-packages/fabric/core/application.py", line 305, in __init__
+    raise ValueError(
+        f"there's already a Fabric application instance running with the name `{name}`"
+    )
+ValueError: there's already a Fabric application instance running with the name `ax-shell`
+                                                                                                                                       
+◄ 1s ○ 
