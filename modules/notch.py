@@ -20,6 +20,7 @@ from modules.player import PlayerSmall
 from modules.power import PowerMenu
 from modules.tmux import TmuxManager
 from modules.tools import Toolbox
+from modules.ai_dashboard import AIDashboard
 from utils.icon_resolver import IconResolver
 from utils.occlusion import check_occlusion
 from widgets.wayland import WaylandWindow as Window
@@ -342,6 +343,7 @@ class Notch(Window):
         self.compact.connect("leave-notify-event", self.on_button_leave)
 
         self.tools = Toolbox(notch=self)
+        self.ai_dashboard = AIDashboard(notch=self)
         self.stack = Stack(
             name="notch-content",
             v_expand=True,
@@ -362,6 +364,7 @@ class Notch(Window):
                 self.tools,
                 self.tmux,
                 self.cliphist,
+                self.ai_dashboard,
             ],
         )
 
@@ -379,6 +382,7 @@ class Notch(Window):
             self.tmux.set_size_request(320, 635)
             self.cliphist.set_size_request(320, 635)
             self.dashboard.set_size_request(410, 900)
+            self.ai_dashboard.set_size_request(450, 700)
 
         else:
             self.compact.set_size_request(260, 40)
@@ -386,6 +390,7 @@ class Notch(Window):
             self.tmux.set_size_request(480, 244)
             self.cliphist.set_size_request(480, 244)
             self.dashboard.set_size_request(1093, 472)
+            self.ai_dashboard.set_size_request(950, 650)
 
         self.stack.set_interpolate_size(True)
         self.stack.set_homogeneous(False)
@@ -1008,6 +1013,7 @@ class Notch(Window):
             "overview": {"instance": self.overview, "hide_revealers": True},
             "power": {"instance": self.power},
             "tools": {"instance": self.tools},
+            "ai": {"instance": self.ai_dashboard, "hide_revealers": True},
         }
 
         if widget_name in widget_configs:

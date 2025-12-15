@@ -4,8 +4,8 @@
     background: alpha(@bg_color, 0.95);
     border-radius: 16px;
     padding: 16px;
-    min-width: 800px;
-    min-height: 600px;
+    min-width: 900px;
+    min-height: 650px;
 }
 
 .ai-header {
@@ -26,14 +26,33 @@
     color: @fg_color;
 }
 
-.status-connected {
-    color: #4ade80;
-    font-weight: bold;
+/* Status Indicator */
+.status-box {
+    padding: 4px 12px;
+    border-radius: 8px;
+    background: alpha(@surface, 0.5);
 }
 
-.status-disconnected {
-    color: #f87171;
-    font-weight: bold;
+.connection-dot {
+    min-width: 8px;
+    min-height: 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+
+.connection-dot.connected {
+    background: #4ade80;
+    box-shadow: 0 0 8px alpha(#4ade80, 0.5);
+}
+
+.connection-dot.disconnected {
+    background: #6b7280;
+}
+
+.status-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: @fg_color;
 }
 
 .ai-section {
@@ -54,7 +73,47 @@
 }
 
 .ai-right-panel {
-    min-width: 400px;
+    min-width: 450px;
+}
+
+/* Resource Monitor Panel */
+.resource-panel {
+    border: 1px solid alpha(@primary, 0.1);
+}
+
+.resource-bar {
+    padding: 4px 0;
+}
+
+.resource-icon {
+    font-size: 14px;
+    color: @primary;
+    min-width: 20px;
+}
+
+.resource-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: @fg_color;
+}
+
+.resource-value {
+    font-size: 11px;
+    font-family: monospace;
+    color: alpha(@fg_color, 0.8);
+    min-width: 70px;
+    text-align: right;
+}
+
+.stats-row {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid alpha(@fg_color, 0.1);
+}
+
+.stat-label {
+    font-size: 11px;
+    color: alpha(@fg_color, 0.7);
 }
 
 /* Agent Cards */
@@ -62,7 +121,7 @@
     background: alpha(@surface, 0.8);
     border-radius: 12px;
     padding: 12px;
-    min-width: 200px;
+    min-width: 220px;
     border: 1px solid alpha(@primary, 0.2);
     transition: all 200ms ease;
 }
@@ -72,63 +131,109 @@
     box-shadow: 0 4px 12px alpha(@primary, 0.2);
 }
 
+.status-dot {
+    min-width: 10px;
+    min-height: 10px;
+    border-radius: 5px;
+    margin-right: 4px;
+}
+
+.status-dot.idle {
+    background: #6b7280;
+}
+
+.status-dot.running {
+    background: #4ade80;
+    box-shadow: 0 0 8px alpha(#4ade80, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.status-dot.completed {
+    background: #60a5fa;
+}
+
+.status-dot.error {
+    background: #f87171;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
 .agent-name {
     font-weight: bold;
     font-size: 13px;
     color: @fg_color;
 }
 
-.agent-status {
-    font-size: 12px;
-    padding: 2px 8px;
-    border-radius: 6px;
-}
-
-.agent-status.idle {
-    background: alpha(@fg_color, 0.1);
-    color: @fg_color;
-}
-
-.agent-status.running {
-    background: alpha(#4ade80, 0.2);
-    color: #4ade80;
-}
-
 .agent-task {
     font-size: 11px;
     color: alpha(@fg_color, 0.7);
     font-family: monospace;
+    padding: 4px 0;
+}
+
+.agent-resources {
+    background: alpha(@bg_color, 0.3);
+    border-radius: 8px;
+    padding: 8px;
+    margin: 4px 0;
+}
+
+.metric-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: alpha(@fg_color, 0.6);
+    min-width: 28px;
+}
+
+.metric-value {
+    font-size: 10px;
+    font-family: monospace;
+    color: alpha(@fg_color, 0.8);
+    min-width: 40px;
+    text-align: right;
+}
+
+.agent-footer {
+    padding-top: 4px;
+    border-top: 1px solid alpha(@fg_color, 0.1);
 }
 
 .agent-timer {
     font-family: monospace;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     color: @primary;
 }
 
-.agent-memory {
-    font-size: 11px;
-    color: alpha(@fg_color, 0.7);
-}
-
-.agent-progress {
-    font-size: 11px;
+.counter-done {
     color: #4ade80;
 }
 
-.agent-failed {
-    font-size: 11px;
+.counter-failed {
     color: #f87171;
 }
 
+.counter-value {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.agent-count {
+    font-size: 12px;
+    color: alpha(@fg_color, 0.6);
+    margin-left: 4px;
+}
+
 #agent-remove-btn {
-    min-width: 24px;
-    min-height: 24px;
+    min-width: 22px;
+    min-height: 22px;
     padding: 2px;
     border-radius: 6px;
     background: transparent;
-    color: alpha(@fg_color, 0.5);
+    color: alpha(@fg_color, 0.4);
 }
 
 #agent-remove-btn:hover {
@@ -170,6 +275,7 @@
 
 .control-btn.start:hover {
     background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 4px 12px alpha(#22c55e, 0.3);
 }
 
 .control-btn.stop {
@@ -179,6 +285,7 @@
 
 .control-btn.stop:hover {
     background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 12px alpha(#ef4444, 0.3);
 }
 
 /* Queue Panel */
@@ -186,6 +293,12 @@
     background: alpha(@surface, 0.5);
     border-radius: 12px;
     padding: 12px;
+}
+
+.queue-count {
+    font-size: 12px;
+    color: alpha(@fg_color, 0.6);
+    margin-left: 4px;
 }
 
 .queue-item {
@@ -234,12 +347,106 @@
     background: alpha(@fg_color, 0.1);
 }
 
+#queue-remove-btn {
+    min-width: 20px;
+    min-height: 20px;
+    padding: 2px;
+    border-radius: 4px;
+    background: transparent;
+    color: alpha(@fg_color, 0.4);
+}
+
+#queue-remove-btn:hover {
+    background: alpha(#f87171, 0.2);
+    color: #f87171;
+}
+
+/* Log Panel */
+#log-panel {
+    min-height: 120px;
+}
+
+.log-list {
+    padding: 4px;
+}
+
+.log-entry {
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: alpha(@bg_color, 0.3);
+}
+
+.log-entry.log-error {
+    background: alpha(#f87171, 0.1);
+    border-left: 2px solid #f87171;
+}
+
+.log-entry.log-warn {
+    background: alpha(#fbbf24, 0.1);
+    border-left: 2px solid #fbbf24;
+}
+
+.log-entry.log-info {
+    border-left: 2px solid alpha(@fg_color, 0.2);
+}
+
+.log-entry.log-high, .log-entry.log-critical {
+    background: alpha(#f87171, 0.15);
+    border-left: 2px solid #ef4444;
+}
+
+.log-entry.log-medium {
+    background: alpha(#fbbf24, 0.1);
+    border-left: 2px solid #fbbf24;
+}
+
+.log-entry.log-low {
+    background: alpha(#4ade80, 0.1);
+    border-left: 2px solid #4ade80;
+}
+
+.log-time {
+    font-family: monospace;
+    font-size: 10px;
+    color: alpha(@fg_color, 0.5);
+    min-width: 55px;
+}
+
+.log-level {
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 50px;
+}
+
+.log-entry.log-error .log-level { color: #f87171; }
+.log-entry.log-warn .log-level { color: #fbbf24; }
+.log-entry.log-info .log-level { color: alpha(@fg_color, 0.6); }
+
+.log-message {
+    font-size: 11px;
+    color: @fg_color;
+}
+
+#clear-log-btn {
+    min-width: 24px;
+    min-height: 24px;
+    padding: 2px;
+    border-radius: 6px;
+    background: transparent;
+    color: alpha(@fg_color, 0.4);
+}
+
+#clear-log-btn:hover {
+    background: alpha(#f87171, 0.2);
+    color: #f87171;
+}
+
 /* Live Chat */
 #live-chat {
     background: alpha(@surface, 0.5);
     border-radius: 12px;
     padding: 12px;
-    min-height: 200px;
+    min-height: 150px;
 }
 
 #chat-mode-btn,
@@ -315,6 +522,23 @@
     background: alpha(@primary, 0.3);
 }
 
+/* Bottom Panel */
+.bottom-panel {
+    min-height: 150px;
+}
+
+/* Panel Icons */
+.panel-icon {
+    font-size: 16px;
+    color: @primary;
+}
+
+.panel-title {
+    font-weight: bold;
+    font-size: 13px;
+    color: @fg_color;
+}
+
 /* Scrollbars */
 #ai-dashboard scrollbar {
     background: transparent;
@@ -328,4 +552,36 @@
 
 #ai-dashboard scrollbar slider:hover {
     background: alpha(@fg_color, 0.3);
+}
+
+/* ComboBox Styling */
+#ai-dashboard combobox {
+    background: alpha(@surface, 0.5);
+    border-radius: 8px;
+    padding: 4px 8px;
+    border: 1px solid alpha(@fg_color, 0.1);
+}
+
+#ai-dashboard combobox button {
+    background: transparent;
+    border: none;
+    padding: 4px 8px;
+}
+
+/* Entry Styling */
+#ai-dashboard entry {
+    background: alpha(@bg_color, 0.5);
+    border-radius: 8px;
+    padding: 8px 12px;
+    border: 1px solid alpha(@fg_color, 0.1);
+    color: @fg_color;
+}
+
+#ai-dashboard entry:focus {
+    border-color: @primary;
+    box-shadow: 0 0 0 2px alpha(@primary, 0.2);
+}
+
+#ai-dashboard entry placeholder {
+    color: alpha(@fg_color, 0.4);
 }
