@@ -1,6 +1,6 @@
 """
 AI Dashboard Module for Ax-Shell
-Autonomous AI Agent Management Interface
+Autonomous AI Agent Management Interface with Real-time WebSocket Integration
 """
 
 import os
@@ -35,6 +35,14 @@ except ImportError:
     Orchestrator = None
     Agent = None
     ResourceMonitor = None
+
+try:
+    from ai_core.websocket_client import WebSocketClient, BackendClient
+    WEBSOCKET_AVAILABLE = True
+except ImportError:
+    WEBSOCKET_AVAILABLE = False
+    WebSocketClient = None
+    BackendClient = None
 
 
 class ProgressBar(Gtk.DrawingArea):
@@ -622,8 +630,15 @@ class AIDashboard(Box):
         self.resource_monitor = ResourceMonitor() if AI_CORE_AVAILABLE and ResourceMonitor else None
         self.agent_cards = {}
         
+        self.ws_client = None
+        self.backend_client = None
+        if WEBSOCKET_AVAILABLE:
+            self.ws_client = WebSocketClient()
+            self.backend_client = BackendClient()
+        
         self._build_ui()
         self._setup_callbacks()
+        self._setup_websocket()
         self._start_monitoring()
     
     def _build_ui(self):
@@ -797,6 +812,156 @@ class AIDashboard(Box):
         if self.resource_monitor:
             self.resource_monitor.on("update", lambda d: GLib.idle_add(self._on_resource_update, d))
     
+    def _setup_websocket(self):
+        if not self.ws_client:
+            return
+        
+        self.ws_client.on("connected", lambda d: GLib.idle_add(self._on_ws_connected, d))
+        self.ws_client.on("disconnected", lambda d: GLib.idle_add(self._on_ws_disconnected, d))
+        self.ws_client.on("error", lambda d: GLib.idle_add(self._on_ws_error, d))
+        
+        self.ws_client.on("agent_added", lambda d: GLib.idle_add(self._on_ws_agent_added, d))
+        self.ws_client.on("agent_removed", lambda d: GLib.idle_add(self._on_ws_agent_removed, d))
+        self.ws_client.on("agent_status", lambda d: GLib.idle_add(self._on_ws_agent_status, d))
+        self.ws_client.on("agents", lambda d: GLib.idle_add(self._on_ws_agents_list, d))
+        
+        self.ws_client.on("queue_updated", lambda d: GLib.idle_add(self._on_ws_queue_updated, d))
+        self.ws_client.on("queue_list", lambda d: GLib.idle_add(self._on_ws_queue_updated, d))
+        
+        self.ws_client.on("command_result", lambda d: GLib.idle_add(self._on_ws_command_result, d))
+        self.ws_client.on("resource_update", lambda d: GLib.idle_add(self._on_ws_resource_update, d))
+        self.ws_client.on("logs", lambda d: GLib.idle_add(self._on_ws_logs, d))
+        
+        self.ws_client.on("chat_message", lambda d: GLib.idle_add(self._on_ws_chat_message, d))
+        self.ws_client.on("terminated", lambda d: GLib.idle_add(self._on_ws_terminated, d))
+        
+        self.ws_client.connect()
+    
+    def _on_ws_connected(self, data):
+        self._set_status("Connected", True)
+        self.log_panel.add_entry("info", "Connected to backend server")
+        self.ws_client.get_agents()
+        self.ws_client.get_queue_list()
+    
+    def _on_ws_disconnected(self, data):
+        self._set_status("Disconnected", False)
+        self.log_panel.add_entry("warn", "Disconnected from backend server")
+    
+    def _on_ws_error(self, data):
+        msg = data.get("message", "Unknown error") if data else "Connection error"
+        self.log_panel.add_entry("error", f"WebSocket error: {msg}")
+    
+    def _on_ws_agent_added(self, data):
+        if not data:
+            return
+        agent_id = data.get("id")
+        name = data.get("name", f"Agent-{agent_id}")
+        
+        if agent_id not in self.agent_cards:
+            card = AgentCard(
+                agent_id=agent_id,
+                name=name,
+                on_remove=self._on_remove_agent
+            )
+            self.agent_cards[agent_id] = card
+            self.agents_grid.add(card)
+            card.show_all()
+            self.agent_count.set_label(f"({len(self.agent_cards)}/10)")
+            self.log_panel.add_entry("info", f"Agent {name} added")
+    
+    def _on_ws_agent_removed(self, data):
+        if not data:
+            return
+        agent_id = data.get("id")
+        if agent_id in self.agent_cards:
+            card = self.agent_cards.pop(agent_id)
+            parent = card.get_parent()
+            if parent:
+                self.agents_grid.remove(parent)
+            self.agent_count.set_label(f"({len(self.agent_cards)}/10)")
+            self.log_panel.add_entry("info", f"Agent {agent_id} removed")
+    
+    def _on_ws_agent_status(self, data):
+        if not data:
+            return
+        agent_id = data.get("id")
+        if agent_id in self.agent_cards:
+            card = self.agent_cards[agent_id]
+            card.update_status(
+                data.get("status", "idle"),
+                data.get("current_task", "")
+            )
+            card.update_metrics(
+                data.get("memory_usage", 0),
+                data.get("tasks_done", 0),
+                data.get("tasks_failed", 0),
+                data.get("cpu_usage", 0)
+            )
+    
+    def _on_ws_agents_list(self, data):
+        if not data:
+            return
+        for agent_data in data:
+            self._on_ws_agent_added(agent_data)
+    
+    def _on_ws_queue_updated(self, data):
+        if data:
+            self.queue_panel.update_queue(data)
+    
+    def _on_ws_command_result(self, data):
+        if not data:
+            return
+        agent_id = data.get("agent_id", 0)
+        command = data.get("command", "")[:30]
+        exit_code = data.get("exit_code", 0)
+        
+        level = "info" if exit_code == 0 else "error"
+        status = "completed" if exit_code == 0 else "failed"
+        self.log_panel.add_entry(level, f"Agent {agent_id}: {command}... [{status}]")
+    
+    def _on_ws_resource_update(self, data):
+        if not data:
+            return
+        alloc_mb = data.get("alloc_mb", 0)
+        sys_mb = data.get("sys_mb", 0)
+        goroutines = data.get("goroutines", 0)
+        
+        mem_percent = (alloc_mb / sys_mb * 100) if sys_mb > 0 else 0
+        
+        mock_data = {
+            "cpu_percent": min(goroutines * 5, 100),
+            "memory_percent": mem_percent,
+            "memory_used_gb": alloc_mb / 1024,
+            "memory_total_gb": sys_mb / 1024,
+            "disk_percent": 50,
+            "disk_used_gb": 250,
+            "disk_total_gb": 500,
+            "load_average": (goroutines / 10, 0.8, 0.6),
+            "uptime_hours": 1
+        }
+        self.resource_panel.update(mock_data)
+    
+    def _on_ws_logs(self, data):
+        if not data:
+            return
+        for log in reversed(data[:10]):
+            level = log.get("level", "info")
+            message = log.get("message", "")
+            self.log_panel.add_entry(level, message)
+    
+    def _on_ws_chat_message(self, data):
+        if not data:
+            return
+        user = data.get("user", "system")
+        content = data.get("content", "")
+        self.live_chat.add_message(user, content)
+    
+    def _on_ws_terminated(self, data):
+        self._set_status("Terminated", False)
+        reason = data.get("reason", "System terminated") if data else "System terminated"
+        self.log_panel.add_entry("warn", reason)
+        self.live_chat.add_message("system", f"<END!> {reason}")
+    
     def _start_monitoring(self):
         if self.resource_monitor:
             self.resource_monitor.start()
@@ -861,40 +1026,46 @@ class AIDashboard(Box):
         agent_id = len(self.agent_cards) + 1
         name = f"Worker-{agent_id}"
         
-        card = AgentCard(
-            agent_id=agent_id,
-            name=name,
-            on_remove=self._on_remove_agent
-        )
-        
-        self.agent_cards[agent_id] = card
-        self.agents_grid.add(card)
-        card.show_all()
-        
-        self.agent_count.set_label(f"({len(self.agent_cards)}/10)")
-        self.log_panel.add_entry("info", f"Agent {name} created")
-        
-        if self.orchestrator:
-            self.orchestrator.add_agent(name)
-        
-        if self.resource_monitor:
-            self.resource_monitor.register_agent(agent_id)
-    
-    def _on_remove_agent(self, agent_id: int):
-        if agent_id in self.agent_cards:
-            card = self.agent_cards.pop(agent_id)
-            parent = card.get_parent()
-            if parent:
-                self.agents_grid.remove(parent)
+        if self.ws_client and self.ws_client.connected:
+            self.ws_client.add_agent(name)
+        else:
+            card = AgentCard(
+                agent_id=agent_id,
+                name=name,
+                on_remove=self._on_remove_agent
+            )
+            
+            self.agent_cards[agent_id] = card
+            self.agents_grid.add(card)
+            card.show_all()
             
             self.agent_count.set_label(f"({len(self.agent_cards)}/10)")
-            self.log_panel.add_entry("info", f"Agent {agent_id} removed")
+            self.log_panel.add_entry("info", f"Agent {name} created")
             
             if self.orchestrator:
-                self.orchestrator.remove_agent(agent_id)
+                self.orchestrator.add_agent(name)
             
             if self.resource_monitor:
-                self.resource_monitor.unregister_agent(agent_id)
+                self.resource_monitor.register_agent(agent_id)
+    
+    def _on_remove_agent(self, agent_id: int):
+        if self.ws_client and self.ws_client.connected:
+            self.ws_client.remove_agent(agent_id)
+        else:
+            if agent_id in self.agent_cards:
+                card = self.agent_cards.pop(agent_id)
+                parent = card.get_parent()
+                if parent:
+                    self.agents_grid.remove(parent)
+                
+                self.agent_count.set_label(f"({len(self.agent_cards)}/10)")
+                self.log_panel.add_entry("info", f"Agent {agent_id} removed")
+                
+                if self.orchestrator:
+                    self.orchestrator.remove_agent(agent_id)
+                
+                if self.resource_monitor:
+                    self.resource_monitor.unregister_agent(agent_id)
     
     def _on_start(self, *args):
         target = self.target_entry.get_text().strip()
@@ -918,6 +1089,10 @@ class AIDashboard(Box):
         self.log_panel.add_entry("info", f"Started execution on {target}")
     
     def _on_stop(self, *args):
+        if self.ws_client and self.ws_client.connected:
+            self.ws_client.terminate()
+            self.log_panel.add_entry("info", "Sent <END!> termination signal")
+        
         if self.orchestrator:
             self.orchestrator.stop()
         
@@ -931,7 +1106,23 @@ class AIDashboard(Box):
         self.status_dot.get_style_context().add_class("connected" if connected else "disconnected")
     
     def _on_chat_send(self, message: str):
-        if self.orchestrator:
+        if self.ws_client and self.ws_client.connected:
+            if message.startswith("/queue"):
+                mode = "/queue"
+                content = message[7:].strip()
+            elif message.startswith("/chat"):
+                mode = "/chat"
+                content = message[6:].strip()
+            else:
+                parts = message.split(" ", 1)
+                mode = parts[0] if parts[0] in ["/chat", "/queue"] else "/chat"
+                content = parts[1] if len(parts) > 1 else message
+            
+            self.ws_client.chat(mode, content)
+            
+            if "<END!>" in content:
+                self.log_panel.add_entry("warn", "Sent <END!> termination signal via chat")
+        elif self.orchestrator:
             def send_async():
                 response = self.orchestrator.chat(message)
                 GLib.idle_add(self.live_chat.add_message, "ai", response)
@@ -941,7 +1132,9 @@ class AIDashboard(Box):
         self.log_panel.add_entry("info", f"Chat: {message[:30]}...")
     
     def _on_queue_remove(self, index: int):
-        if self.orchestrator:
+        if self.ws_client and self.ws_client.connected:
+            self.ws_client.remove_from_queue(index)
+        elif self.orchestrator:
             self.orchestrator.queue_manager.remove(index)
         self.log_panel.add_entry("info", f"Removed queue item #{index}")
     
