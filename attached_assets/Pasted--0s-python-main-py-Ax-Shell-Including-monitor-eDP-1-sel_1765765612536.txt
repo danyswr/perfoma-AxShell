@@ -1,0 +1,62 @@
+◄ 0s ◎ python main.py
+Ax-Shell: Including monitor 'eDP-1' (selected)
+2025-12-15 09:26:34.630 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:26:34.631 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+Error retrieving current power mode: [Errno 2] Tidak ada berkas atau direktori seperti itu: 'powerprofilesctl'
+2025-12-15 09:26:34.655 | DEBUG    | fabric.core.widgets.wm:layout_changed:273 - [Language] Keyboard: power-button, Language: English (US), Match: True
+2025-12-15 09:26:34.655 | DEBUG    | fabric.hyprland.widgets:do_initialize:226 - [Language] found language: English (US) for keyboard power-button
+2025-12-15 09:26:34.655 | INFO     | fabric.hyprland.widgets:do_initialize:236 - [Language] Set language: English (US) for keyboard: .*
+2025-12-15 09:26:34.655 | INFO     | fabric.hyprland.widgets:on_ready:195 - [Language] Connected to the hyprland socket
+2025-12-15 09:26:34.658 | INFO     | services.brightness:_detect_backend:128 - Using brightnessctl backend with device: intel_backlight
+2025-12-15 09:26:34.788 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:26:34.788 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+False
+
+(main.py:519527): Gtk-CRITICAL **: 09:26:35.040: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
+
+(main.py:519527): Gtk-CRITICAL **: 09:26:35.043: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
+
+(main.py:519527): Gtk-CRITICAL **: 09:26:35.045: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
+2025-12-15 09:26:35.228 | INFO     | fabric.hyprland.widgets:on_ready:147 - [ActiveWindow] Connected to the hyprland socket
+Connected to WebSocket server at ws://localhost:8080/ws
+2025-12-15 09:26:35.297 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:26:35.297 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:26:35.374 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:26:35.375 | WARNING  | widgets.wayland:do_handle_post_show_request:314 - [WaylandWindow] showing an empty window is not recommended, some compositors might freak out.
+2025-12-15 09:26:35.385 | WARNING  | fabric.utils.helpers:import_replacement:386 - [FASS] couldn't find the imported file: /home/danyswr/.config/Perfoma-Ax-Shell/./styles/colors.css, Error: [Errno 2] Tidak ada berkas atau direktori seperti itu: '/home/danyswr/.config/Perfoma-Ax-Shell/./styles/colors.css'
+Traceback (most recent call last):
+  File "/home/danyswr/.config/Perfoma-Ax-Shell/main.py", line 148, in <module>
+    app.set_css()
+    ~~~~~~~~~~~^^
+  File "/home/danyswr/.config/Perfoma-Ax-Shell/main.py", line 142, in set_css
+    app.set_stylesheet_from_file(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        get_relative_path("main.css"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/lib/python3.13/site-packages/fabric/core/application.py", line 474, in set_stylesheet_from_file
+    self.set_stylesheet_from_string(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        f.read(),
+        ^^^^^^^^^
+    ...<4 lines>...
+        **kwargs,
+        ^^^^^^^^^
+    )
+    ^
+  File "/usr/lib/python3.13/site-packages/fabric/core/application.py", line 499, in set_stylesheet_from_string
+    provider.load_from_data(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        bytearray(
+        ^^^^^^^^^^
+    ...<2 lines>...
+        )  # type: ignore
+        ^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/lib/python3.13/site-packages/gi/overrides/Gtk.py", line 1805, in load_from_data
+    super().load_from_data(text)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+gi.repository.GLib.GError: gtk-css-provider-error-quark: <data>:2222:14'text-align' is not a valid property name (3)
+                 
