@@ -159,7 +159,7 @@ class ResourceMonitorPanel(Box):
         self.ram_bar = ResourceBar("RAM", icons.memory, "#a78bfa")
         self.add(self.ram_bar)
         
-        self.network_bar = ResourceBar("Network", icons.network, "#34d399")
+        self.network_bar = ResourceBar("Network", icons.ai_network, "#34d399")
         self.add(self.network_bar)
         
         self.disk_bar = ResourceBar("Disk I/O", icons.disk, "#fbbf24")
