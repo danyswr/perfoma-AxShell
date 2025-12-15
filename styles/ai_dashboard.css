@@ -1,0 +1,331 @@
+/* AI Dashboard Styles for Ax-Shell */
+
+#ai-dashboard {
+    background: alpha(@bg_color, 0.95);
+    border-radius: 16px;
+    padding: 16px;
+    min-width: 800px;
+    min-height: 600px;
+}
+
+.ai-header {
+    padding: 8px 16px;
+    background: alpha(@primary, 0.1);
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+
+.ai-icon {
+    font-size: 24px;
+    color: @primary;
+}
+
+.ai-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: @fg_color;
+}
+
+.status-connected {
+    color: #4ade80;
+    font-weight: bold;
+}
+
+.status-disconnected {
+    color: #f87171;
+    font-weight: bold;
+}
+
+.ai-section {
+    background: alpha(@surface, 0.5);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.section-title {
+    font-weight: bold;
+    font-size: 14px;
+    color: @fg_color;
+    margin-bottom: 8px;
+}
+
+.ai-left-panel {
+    min-width: 300px;
+}
+
+.ai-right-panel {
+    min-width: 400px;
+}
+
+/* Agent Cards */
+.agent-card {
+    background: alpha(@surface, 0.8);
+    border-radius: 12px;
+    padding: 12px;
+    min-width: 200px;
+    border: 1px solid alpha(@primary, 0.2);
+    transition: all 200ms ease;
+}
+
+.agent-card:hover {
+    border-color: @primary;
+    box-shadow: 0 4px 12px alpha(@primary, 0.2);
+}
+
+.agent-name {
+    font-weight: bold;
+    font-size: 13px;
+    color: @fg_color;
+}
+
+.agent-status {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.agent-status.idle {
+    background: alpha(@fg_color, 0.1);
+    color: @fg_color;
+}
+
+.agent-status.running {
+    background: alpha(#4ade80, 0.2);
+    color: #4ade80;
+}
+
+.agent-task {
+    font-size: 11px;
+    color: alpha(@fg_color, 0.7);
+    font-family: monospace;
+}
+
+.agent-timer {
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+    color: @primary;
+}
+
+.agent-memory {
+    font-size: 11px;
+    color: alpha(@fg_color, 0.7);
+}
+
+.agent-progress {
+    font-size: 11px;
+    color: #4ade80;
+}
+
+.agent-failed {
+    font-size: 11px;
+    color: #f87171;
+}
+
+#agent-remove-btn {
+    min-width: 24px;
+    min-height: 24px;
+    padding: 2px;
+    border-radius: 6px;
+    background: transparent;
+    color: alpha(@fg_color, 0.5);
+}
+
+#agent-remove-btn:hover {
+    background: alpha(#f87171, 0.2);
+    color: #f87171;
+}
+
+/* Mode Buttons */
+#mode-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: alpha(@surface, 0.5);
+    border: 1px solid alpha(@fg_color, 0.1);
+    transition: all 200ms ease;
+}
+
+#mode-btn:hover {
+    background: alpha(@primary, 0.1);
+}
+
+.mode-active {
+    background: alpha(@primary, 0.2) !important;
+    border-color: @primary !important;
+    color: @primary;
+}
+
+/* Control Buttons */
+.control-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 200ms ease;
+}
+
+.control-btn.start {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    color: white;
+}
+
+.control-btn.start:hover {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.control-btn.stop {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    color: white;
+}
+
+.control-btn.stop:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+/* Queue Panel */
+#queue-panel {
+    background: alpha(@surface, 0.5);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.queue-item {
+    background: alpha(@bg_color, 0.5);
+    border-radius: 8px;
+    padding: 8px;
+    border-left: 3px solid @primary;
+}
+
+.queue-item.queue-pending {
+    border-left-color: alpha(@fg_color, 0.3);
+}
+
+.queue-item.queue-running {
+    border-left-color: #4ade80;
+    background: alpha(#4ade80, 0.1);
+}
+
+.queue-item.queue-completed {
+    border-left-color: #22c55e;
+    opacity: 0.7;
+}
+
+.queue-item.queue-failed {
+    border-left-color: #f87171;
+    background: alpha(#f87171, 0.1);
+}
+
+.queue-index {
+    font-weight: bold;
+    font-size: 11px;
+    color: alpha(@fg_color, 0.5);
+    min-width: 30px;
+}
+
+.queue-command {
+    font-family: monospace;
+    font-size: 11px;
+    color: @fg_color;
+}
+
+.queue-status {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: alpha(@fg_color, 0.1);
+}
+
+/* Live Chat */
+#live-chat {
+    background: alpha(@surface, 0.5);
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 200px;
+}
+
+#chat-mode-btn,
+#queue-mode-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    background: alpha(@surface, 0.5);
+    border: 1px solid alpha(@fg_color, 0.1);
+}
+
+.chat-messages {
+    padding: 8px;
+}
+
+.chat-message {
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin: 2px 0;
+}
+
+.chat-user {
+    background: alpha(@primary, 0.1);
+}
+
+.chat-ai {
+    background: alpha(@surface, 0.8);
+}
+
+.chat-system {
+    background: alpha(#fbbf24, 0.1);
+    font-style: italic;
+}
+
+.chat-finding {
+    background: alpha(#4ade80, 0.1);
+    border-left: 3px solid #4ade80;
+}
+
+.chat-sender {
+    font-weight: bold;
+    font-size: 11px;
+    color: @primary;
+    min-width: 50px;
+}
+
+.chat-content {
+    font-size: 12px;
+    color: @fg_color;
+}
+
+#chat-send-btn {
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 8px;
+    background: @primary;
+    color: white;
+}
+
+#chat-send-btn:hover {
+    background: shade(@primary, 0.9);
+}
+
+#add-agent-btn {
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 8px;
+    background: alpha(@primary, 0.2);
+    color: @primary;
+}
+
+#add-agent-btn:hover {
+    background: alpha(@primary, 0.3);
+}
+
+/* Scrollbars */
+#ai-dashboard scrollbar {
+    background: transparent;
+}
+
+#ai-dashboard scrollbar slider {
+    background: alpha(@fg_color, 0.2);
+    border-radius: 4px;
+    min-width: 6px;
+}
+
+#ai-dashboard scrollbar slider:hover {
+    background: alpha(@fg_color, 0.3);
+}
