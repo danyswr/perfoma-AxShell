@@ -1,0 +1,46 @@
+fitur apa saja
+
+1. penginputan target (ip,url/domain,path)
+2. kategori (ip,url/domain,path) buat membantu models jenis inputan user ini apa dan input instruksi custom jadi user bisa kasih tau ke models tujuan nya ngapain.
+3. stealth mode
+4. agresive mode
+5. jenis models(berikan ada 4 models yang tersedia di openrouter dan 1 lagi custom)
+6. api-key dan log dir => di taruh di .env
+7. user bisa memilih agent yang ingin di gunakan  jumlah nya berapa maksimal 10, di buat nya dalam bentuk card yahh , terus user dapat menambahkan, menghapus secara manual, nanti di card nya ada semacam loading progress ada semacam stopwatch biar bisa tau agent sudah melakukan instruksi seberapa lama, dan bisa liat juga agent last execute , biar user bisa tau eksekusi yang sedang di lakukan agent apa, sama memory usage.
+8. live chat, jadi user bisa chat models di tengah tengah eksekusi tanpa mengganggu proses models dan agent, kan agent bakalan menunggu laporan dari setiap agent nah selama menunggu itu models bakalan seolah olah loading gituu, itu kan models bakalan nunggu juga, nahh fungsi live chat adalah memberikan masukan memberikan arhan tambahan dll.
+9. fitur log, nanti semua aktifitas nya agent bakalan di simpan di log, terus models ddapat mencatat ke dalam bentuk .txt buat informasi penting yang di peroleh.
+10. berikan delay atau time.sleep tujuan nya untuk menghindari dari rate limit.
+11. agent collaboration, jadi agent bisa berdiskusi antar agent, share findings,reqeust help.
+12. Sistem koordinasi antar-agent dengan inter-agent messaging dan shared knowledge base yang memungkinkan agent saling berbagi informasi real-time, dilengkapi dengan priority queue dan dependency management untuk orchestration yang optimal. Dashboard monitoring menampilkan resource usage graph (CPU, RAM, Network), success/failure rate metrics, dan network traffic monitoring per agent untuk visibility penuh terhadap performa sistem. Semua findings akan di-aggregate dengan severity classification (Critical, High, Medium, Low, Info), CVE matching, CVSS scoring, dan auto-generate report dalam format PDF/HTML dengan visualization yang lengkap. Data dapat di-export ke berbagai format standard (JSON, XML, CSV) dengan support untuk database storage (SQLite/PostgreSQL) dan integration ke SIEM tools atau API endpoint untuk tools eksternal. Untuk stealth operation, sistem mendukung random user agent rotation, proxy chain support, timing randomization, dan traffic obfuscation yang bisa dikonfigurasi per-agent untuk menghindari detection dari target security systems.
+13. Monitoring Resource Real-Time: Selain memory usage di card agent, tambahin monitoring CPU, disk I/O, dan network usage per agent. Ini bisa ditampilkan di dashboard utama atau per card, dengan alert jika melebihi threshold (misalnya, auto-pause agent kalau memory >80%). Alasan: Di localhost, resource terbatas, jadi ini bantu cegah crash atau slowdown, bikin lebih profesional buat testing jangka panjang.
+
+
+nah selanjut nya untuk mekanisme nya models kan tidak dapat mengeksekusi CMD oleh karena itu models harus menggunakan format RUN <command> untuk menjalankan CMD secara tidak langsung karena konsep nya bakalan di baca oleh backend dan backend yang akan melakukan nya perantara agent. contoh RUN nmap -sV porsche.com.
+
+
+pertama masih kurang real time tolong di buat lebih realtime , terus gw pengen konsep nya begini biar hemat token juga gw pengen setiap inputan model itu langsung banyak dan langsung memprediksi  alur nya, gini kan sebelum nya output models itu buat spesifik agent 
+
+{
+"1":"RUN Nikto -h Porsche.com",
+"2":"RUN Nmap -sV porsche.com",
+"3":"curl ..."
+
+}
+
+jadi key nya itu adalah urutan queue dan value nya adalah intruksi command nahh konsepnya begini kan setiap agent itu melakukan eksekusi nya berbeda beda kecepatan nya ada kemungkinan ada yang kelar duluan ada yng lama, nahh jadii di dalam antrin tersebut kek siapa yang kelar duluan bakalan menerima instruksi selanjut nya  contoh agent 1 agent 2 dan agent 3, mereka menjalankan instruksi bareng bareng, agent 1 kelar duluan di queue udh ada 10 instruksi dia bakaln ambil instruksi index 0  begitu juga agent 3 kelar dia baklan ambil instruksi dari index 0,
+
+
+
+
+
+
+nahh selanjut nya ketika models merasa instruksi yang di berikan oleh user sudah terpenuhi gunakan <END!> untuk memberhentikan eksekusi.
+
+nah pada live chat ada fitur semacam mode, nanti ada /chat dan /queue
+nah untuk /chat itu untuk ngobrol sama models di tengah proses secara realtime tanpa mengganggu proses agent dan models di situ user bisa memberikan masukan memberikan instruksi baru.
+
+nahh untuk /queue ada banyak jenis nya (index nya di bikin dari 1 jangan sampe 0 sehingga di backend nya 0 + 1)
+/queue list ===> untuk melihat daftar list instruksi jadi user bisa tau antrian instruksi yang bakalan di kerjakan oleh agent ada apa aj.
+/queue rm <urutan list> ====> untuk menghapus instruksi contoh /queue rm 1
+/queue add {"1":"RUN sqlmap ..."} ===> untuk menambahkan instruksi ke terakhir...
+
