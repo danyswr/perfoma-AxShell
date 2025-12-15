@@ -22,6 +22,7 @@
 @import url("./styles/wallpapers.css");
 @import url("./styles/systemprofiles.css");
 @import url("./styles/workspaces.css");
+@import url("./styles/ai_dashboard.css");
 
 * {
   all: unset;
